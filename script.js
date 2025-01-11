@@ -34,9 +34,74 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  document.addEventListener("DOMContentLoaded", () => {
+    const serviceButtons = [
+      { id: "webDesigningButton", serviceName: "Web Designing" },
+      { id: "softwareDevButton", serviceName: "Software Development" },
+      { id: "androidDevButton", serviceName: "Android App Development" },
+      { id: "digitalMarketingButton", serviceName: "Digital Marketing" },
+      { id: "seoButton", serviceName: "SEO" },
+      { id: "ePublishingButton", serviceName: "E-Publishing" },
+      { id: "digitizationButton", serviceName: "Digitization" },
+      { id: "dataConversionButton", serviceName: "Data Conversion" },
+    ];
+
+    // Loop through each service button to set the display behavior
+    serviceButtons.forEach((button) => {
+      const serviceButton = document.getElementById(button.id);
+      if (serviceButton) {
+        serviceButton.addEventListener("click", () => {
+          displayServiceDetails(button.serviceName);
+        });
+      }
+    });
+
+    // Display Service Details along with Contact and More Details buttons
+    function displayServiceDetails(serviceName) {
+      const serviceInfo = document.getElementById("productServiceInfo");
+      const contactMoreDetails = document.getElementById("contactMoreDetails");
+
+      // Hide the service options
+      document.getElementById("serviceOptions").style.display = "none";
+
+      // Show the service info along with buttons for Contact and More Details
+      if (serviceInfo) {
+        serviceInfo.style.display = "block";
+        const serviceTitle = document.getElementById("productServiceTitle");
+        const serviceDescription = document.getElementById(
+          "productServiceDescription"
+        );
+
+        if (serviceTitle && serviceDescription) {
+          serviceTitle.textContent = serviceName;
+          serviceDescription.textContent = `Learn more about ${serviceName}.`;
+        }
+      }
+
+      if (contactMoreDetails) {
+        contactMoreDetails.style.display = "block";
+      }
+    }
+
+    // Existing code for handling "Contact" and "More Details" buttons
+    document
+      .getElementById("contactButton")
+      .addEventListener("click", function () {
+        window.location.href =
+          "https://api.whatsapp.com/send?phone=919997544981&text=Hi+from+web";
+      });
+
+    document
+      .getElementById("moreDetailsButton")
+      .addEventListener("click", function () {
+        document.getElementById("contactMoreDetails").style.display = "none";
+        document.getElementById("moreDetailsLinks").style.display = "block";
+      });
+  });
+
   // Display Contact and More Details Modal
   function redirectToContactModal() {
-    const contactMoreDetails = document.getElementById("contactMoreDetails"); // Ensure it's defined
+    const contactMoreDetails = document.getElementById("contactMoreDetails");
     if (productOptions) {
       productOptions.style.display = "none";
     }

@@ -1,0 +1,223 @@
+/* General Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Nunito", sans-serif;
+  font-weight: 400;
+  position: absolute;
+  font-size: 100%;
+  background: #f1f1f1;
+}
+
+html {
+  --primaryGradient: linear-gradient(93.12deg, #074d8f 0.52%, #1080e9 100%);
+  --secondaryGradient: linear-gradient(
+    268.91deg,
+    #0a457c -2.14%,
+    #1080e9 99.69%
+  );
+  --primaryBoxShadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+  --secondaryBoxShadow: 0px -10px 15px rgba(0, 0, 0, 0.1);
+  --primary: #1080e9;
+}
+
+/* Chatbox Styles */
+.chatbox {
+  position: fixed;
+  bottom: 30px; /* Adjust to keep the chatbox above the footer */
+  right: 30px;
+  z-index: 1000;
+}
+
+.chatbox__support {
+  display: flex;
+  flex-direction: column;
+  background: #f9f9f9;
+  width: 300px;
+  height: 500px;
+  box-shadow: var(--primaryBoxShadow);
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  overflow: hidden;
+  position: relative;
+}
+
+.chatbox__header {
+  background: var(--primaryGradient);
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  color: white;
+}
+
+.chatbox__image--header {
+  margin-right: 10px;
+}
+
+.chatbox__heading--header {
+  font-size: 1.1rem;
+}
+
+.chatbox__description--header {
+  font-size: 0.85rem;
+}
+
+.chatbox__messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+#registrationForm {
+  padding: 10px;
+}
+
+.chatbox__button button {
+  background: white;
+  border: none;
+  border-radius: 100%;
+  box-shadow: var(--primaryBoxShadow);
+  padding: 10px;
+  cursor: pointer;
+}
+
+.chatbox__button button img {
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+}
+
+/* Hover Effect */
+button:hover {
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.8
+  ); /* Slightly less transparent on hover */
+  border-color: rgba(0, 0, 0, 0.8); /* Slightly darker on hover */
+}
+
+/* Footer Styles */
+.chatbox__footer {
+  background: var(--secondaryGradient);
+  padding: 10px;
+  position: absolute;
+  height: 50px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+/* Registration Form Styling */
+#registerForm input,
+#registerForm button {
+  font-size: 0.85rem;
+}
+
+#registerForm label {
+  font-size: 0.9rem;
+}
+
+#registerForm .form-control {
+  font-size: 0.85rem;
+  padding: 5px;
+}
+
+#registerForm .btn {
+  font-size: 0.85rem;
+  padding: 8px;
+  width: 50%;
+}
+
+/* Icon Styles */
+.chatbox__button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 1000;
+}
+
+/* Ensures each button in the container takes equal space */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px; /* Space between buttons */
+  position: relative;
+}
+
+/* Ensures buttons fill the available space and adjust text */
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 30px; /* Capsule shape */
+  padding: 10px 20px; /* Adjust padding for a more capsule-like appearance */
+  font-size: 1rem;
+  background-color: white;
+  border: 2px solid #000000; /* Black border */
+  color: black; /* Text color black */
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+/* Product/Service Option Buttons */
+.product-option,
+.service-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+/* Additional Button Styling */
+button#chatboxIcon img {
+  width: 30px;
+  height: 30px;
+}
+
+/* Hover Effect for Buttons */
+button:hover {
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.8
+  ); /* Slightly less transparent on hover */
+  border-color: rgba(0, 0, 0, 0.8); /* Slightly darker on hover */
+}
+
+/* Add a max-height to avoid overflow if there are many buttons */
+.container {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.scrollable-section {
+  max-height: 80vh;
+  overflow-y: auto;
+  padding-bottom: 60px; /* Space for sticky footer */
+}
+
+/* Sticky back button */
+.sticky-back-button {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  background: white;
+  border-top: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}

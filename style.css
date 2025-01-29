@@ -103,6 +103,11 @@ button:hover {
   ); /* Slightly less transparent on hover */
   border-color: rgba(0, 0, 0, 0.8); /* Slightly darker on hover */
 }
+#contactOptions {
+  display: none;
+  margin-top: 20px;
+  text-align: center;
+}
 
 /* Footer Styles */
 .chatbox__footer {

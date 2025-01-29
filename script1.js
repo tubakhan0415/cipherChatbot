@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const contactButton = document.getElementById("contactButton");
   const contactOptions = document.getElementById("contactOptions");
   const backToOptionsButton = document.getElementById("backToOptionsButton");
+  const selectedProductName = document.getElementById("selectedProductName");
 
   const chatboxIcon = document.getElementById("chatboxIcon");
   const productButton = document.getElementById("productButton");
@@ -23,13 +24,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const tallyCloudButton = document.getElementById("tallyCloudButton");
   const tallyMobileButton = document.getElementById("tallyMobileButton");
 
-  contactButton.addEventListener("click", () => {
-    contactOptions.style.display = "block";
-  });
+  // Ensure that the elements are available before attaching event listeners
+  if (contactButton) {
+    contactButton.addEventListener("click", () => {
+      contactOptions.style.display = "block";
+    });
+  }
 
-  backToOptionsButton.addEventListener("click", () => {
-    contactOptions.style.display = "none";
-  });
+  if (backToOptionsButton) {
+    backToOptionsButton.addEventListener("click", () => {
+      contactOptions.style.display = "none";
+    });
+  }
 
   // Attach Event Listeners to Redirect Buttons
   const buttons = [
@@ -39,7 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
     tallyCloudButton,
     tallyMobileButton,
   ];
-
   buttons.forEach((button) => {
     if (button) {
       button.addEventListener("click", redirectToContactModal);
@@ -59,12 +64,14 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
 
     // Loop through each service button to set the display behavior
-    serviceButtons.forEach((button) => {
-      const serviceButton = document.getElementById(button.id);
-      if (serviceButton) {
-        serviceButton.addEventListener("click", () => {
-          displayServiceDetails(button.serviceName);
+    serviceButtons.forEach(({ id, serviceName }) => {
+      const button = document.getElementById(id);
+      if (button) {
+        button.addEventListener("click", () => {
+          console.log(`${serviceName} Button Clicked`);
         });
+      } else {
+        console.error(`Button with id ${id} not found in DOM`);
       }
     });
 
@@ -72,17 +79,71 @@ document.addEventListener("DOMContentLoaded", () => {
     function displayServiceDetails(serviceName) {
       const serviceInfo = document.getElementById("productServiceInfo");
       const contactMoreDetails = document.getElementById("contactMoreDetails");
-
-      // Hide the service options
-      document.getElementById("serviceOptions").style.display = "none";
+      const productServiceInfo = document.getElementById("productServiceInfo");
+      const serviceTitle = document.getElementById("productServiceTitle");
+      const serviceDescription = document.getElementById(
+        "productServiceDescription"
+      );
 
       // Show the service info along with buttons for Contact and More Details
       if (serviceInfo) {
         serviceInfo.style.display = "block";
-        const serviceTitle = document.getElementById("productServiceTitle");
-        const serviceDescription = document.getElementById(
-          "productServiceDescription"
+        serviceTitle.textContent = serviceName;
+        serviceDescription.textContent = `Learn more about ${serviceName}. Connect with us for detailed information.`;
+
+        // Function to handle displaying service details
+        function handleServiceClick(serviceName) {
+          document.getElementById("serviceOptions").style.display = "none";
+          const serviceContactDetails = document.getElementById(
+            "serviceContactMoreDetails"
+          );
+          const serviceTitle = document.getElementById("productServiceTitle");
+          const serviceDescription = document.getElementById(
+            "productServiceDescription"
+          );
+
+          // Show the service details
+          if (serviceContactDetails) {
+            serviceContactDetails.style.display = "block";
+          }
+          if (serviceTitle) {
+            serviceTitle.textContent = serviceName;
+          }
+          if (serviceDescription) {
+            serviceDescription.textContent = `Learn more about ${serviceName}. Connect with us for detailed information.`;
+          }
+        }
+
+        // Add click event listeners to all service buttons
+        serviceButtons.forEach((button) => {
+          const serviceButton = document.getElementById(button.id);
+          if (serviceButton) {
+            serviceButton.addEventListener("click", () => {
+              handleServiceClick(button.serviceName);
+            });
+          }
+        });
+
+        // Handle back button for returning to service options
+        const backToServiceOptionsButton = document.getElementById(
+          "backToServiceOptionsButton"
         );
+        if (backToServiceOptionsButton) {
+          backToServiceOptionsButton.addEventListener("click", () => {
+            document.getElementById("serviceContactMoreDetails").style.display =
+              "none";
+            document.getElementById("serviceOptions").style.display = "block";
+          });
+        }
+        // Hide other options and show service-specific details
+        if (serviceOptions) serviceOptions.style.display = "none";
+        if (productServiceInfo) {
+          productServiceInfo.style.display = "block";
+          if (serviceTitle) serviceTitle.textContent = serviceName;
+          if (serviceDescription) {
+            serviceDescription.textContent = `Learn more about ${serviceName}. Connect with us for detailed information.`;
+          }
+        }
 
         if (serviceTitle && serviceDescription) {
           serviceTitle.textContent = serviceName;
@@ -133,12 +194,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Toggle Chatbox Visibility
-  chatboxIcon?.addEventListener("click", () => {
-    const isHidden =
-      chatboxSupport.style.display === "none" ||
-      chatboxSupport.style.display === "";
-    chatboxSupport.style.display = isHidden ? "block" : "none";
-  });
+  if (chatboxIcon) {
+    chatboxIcon.addEventListener("click", () => {
+      const isHidden =
+        chatboxSupport.style.display === "none" ||
+        chatboxSupport.style.display === "";
+      chatboxSupport.style.display = isHidden ? "block" : "none";
+    });
+  }
 
   // When the Contact button is clicked, redirect to WhatsApp
   // document
@@ -149,20 +212,79 @@ document.addEventListener("DOMContentLoaded", () => {
   //   });
 
   // When the More Details button is clicked, show the more details links
-  document
-    .getElementById("moreDetailsButton")
-    .addEventListener("click", function () {
-      document.getElementById("contactMoreDetails").style.display = "none";
-      document.getElementById("moreDetailsLinks").style.display = "block";
-    });
+  // document
+  //   .getElementById("moreDetailsButton")
+  //   .addEventListener("click", function () {
+  //     document.getElementById("contactMoreDetails").style.display = "none";
+  //     document.getElementById("moreDetailsLinks").style.display = "block";
+  //   });
 
   // Handle Form Submission
-  document.getElementById("registerForm")?.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const name = document.getElementById("name")?.value;
-    document.getElementById("registrationForm").style.display = "none";
-    document.getElementById("productServiceOptions").style.display = "block";
+  if (document.getElementById("registerForm")) {
+    document.getElementById("registerForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("name")?.value;
+      document.getElementById("registrationForm").style.display = "none";
+      document.getElementById("productServiceOptions").style.display = "block";
+    });
+  }
+
+  // Event listener for product buttons
+  document.querySelectorAll(".product-button").forEach((button) => {
+    button.addEventListener("click", () => {
+      const productName = button.getAttribute("data-product");
+      selectedProductName.textContent = productName;
+
+      // Show the contact and more details section
+      productOptions.style.display = "none";
+      contactMoreDetails.style.display = "block";
+    });
   });
+
+  // Event listener for the "More Details" button
+  document.getElementById("moreDetailsButton").addEventListener("click", () => {
+    const productName = selectedProductName.textContent;
+    let redirectUrl;
+
+    // Define URLs for each product
+    switch (productName) {
+      case "Tally":
+        redirectUrl = "https://andwebtech.com/content.php#";
+        break;
+      case "EzyBill":
+        redirectUrl = "https://andwebtech.com/content2.php";
+        break;
+      case "Import BusyData":
+        redirectUrl = "https://andwebtech.com/content2.php#";
+        break;
+      case "Tally on Cloud":
+        redirectUrl = "https://andwebtech.com/tally_on_cloud.php";
+        break;
+      case "Tally on Mobile":
+        redirectUrl = "https://andwebtech.com/tally_on_mobile.php";
+        break;
+      default:
+        redirectUrl = "#";
+        break;
+    }
+
+    // Redirect to the product-specific URL
+    window.open(redirectUrl, "_blank");
+  });
+
+  // Back button logic
+  document.getElementById("backoButton").addEventListener("click", () => {
+    contactMoreDetails.style.display = "none";
+    productOptions.style.display = "block";
+  });
+
+  // document
+  //   .getElementById("backToProductServiceOptionsFromProduct")
+  //   .addEventListener("click", () => {
+  //     productOptions.style.display = "none";
+  //     // Add logic to go back to the service options
+  //     alert("Navigate back to the service options");
+  //   });
 
   // Handle Product Button Click
   productButton?.addEventListener("click", () => {
@@ -199,21 +321,6 @@ document.addEventListener("DOMContentLoaded", () => {
       productServiceInfo.style.display = "block";
     }
   }
-
-  // Similar logic for other "Back" buttons
-  document
-    .getElementById("backToProductServiceOptionsFromProduct")
-    .addEventListener("click", function () {
-      document.getElementById("productOptions").style.display = "none";
-      document.getElementById("productServiceOptions").style.display = "block";
-    });
-
-  document
-    .getElementById("backToProductServiceOptionsFromService")
-    .addEventListener("click", function () {
-      document.getElementById("serviceOptions").style.display = "none";
-      document.getElementById("productServiceOptions").style.display = "block";
-    });
 
   document.getElementById("tallyButton")?.addEventListener("click", () => {
     displayProductServiceInfo(
@@ -252,23 +359,29 @@ document.addEventListener("DOMContentLoaded", () => {
       );
     });
 
-  // Service Button Clicks
-  document
-    .getElementById("webDesigningButton")
-    ?.addEventListener("click", () => {
-      displayProductServiceInfo(
-        "Web Designing",
-        "Professional web design services."
+  // Handle Service Options (show Contact and More Details)
+  const webDesigningButton = document.getElementById("webDesigningButton");
+  if (webDesigningButton) {
+    webDesigningButton.addEventListener("click", function () {
+      const serviceContactMoreDetails = document.getElementById(
+        "serviceContactMoreDetails"
       );
+      const serviceOptions = document.getElementById("serviceOptions");
+      if (serviceContactMoreDetails && serviceOptions) {
+        serviceContactMoreDetails.style.display = "block";
+        serviceOptions.style.display = "none";
+      } else {
+        console.error("Required elements for webDesigningButton not found.");
+      }
     });
+  }
 
   document
     .getElementById("softwareDevButton")
-    ?.addEventListener("click", () => {
-      displayProductServiceInfo(
-        "Software Development",
-        "Custom software development for businesses."
-      );
+    .addEventListener("click", function () {
+      document.getElementById("serviceContactMoreDetails").style.display =
+        "block";
+      document.getElementById("serviceOptions").style.display = "none";
     });
 
   document.getElementById("androidDevButton")?.addEventListener("click", () => {
@@ -277,6 +390,54 @@ document.addEventListener("DOMContentLoaded", () => {
       "Develop your custom Android apps."
     );
   });
+
+  // Back to Service Options from Contact/More Details
+  document
+    .getElementById("backToServiceOptionsButton")
+    ?.addEventListener("click", function () {
+      const serviceContactMoreDetails = document.getElementById(
+        "serviceContactMoreDetails"
+      );
+      const serviceOptions = document.getElementById("serviceOptions");
+      if (serviceContactMoreDetails)
+        serviceContactMoreDetails.style.display = "none";
+      if (serviceOptions) serviceOptions.style.display = "block";
+    });
+
+  // Back to Product/Service Options
+  document
+    .getElementById("backToProductServiceOptionsFromService")
+    .addEventListener("click", function () {
+      document.getElementById("serviceOptions").style.display = "none";
+      document.getElementById("productServiceOptions").style.display = "block";
+    });
+
+  // Show Contact Information (WhatsApp and Call)
+  document
+    .getElementById("contactButton")
+    .addEventListener("click", function () {
+      document.getElementById("serviceContactInfo").style.display = "block";
+      document.getElementById("serviceMoreDetailsLinks").style.display = "none";
+    });
+
+  // Add event listener to the "More Details" button
+  const moreDetailsButton = document.getElementById("moreDetailsButton");
+  if (moreDetailsButton) {
+    moreDetailsButton.addEventListener("click", function () {
+      const serviceMoreDetailsLinks = document.getElementById(
+        "serviceMoreDetailsLinks"
+      );
+      const serviceContactInfo = document.getElementById("serviceContactInfo");
+
+      // Check if the elements exist before attempting to modify their style
+      if (serviceMoreDetailsLinks) {
+        serviceMoreDetailsLinks.style.display = "block";
+      }
+      if (serviceContactInfo) {
+        serviceContactInfo.style.display = "none";
+      }
+    });
+  }
 
   document
     .getElementById("digitalMarketingButton")
@@ -322,139 +483,44 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-  const serviceButtons = {
-    webDesigningButton: "Web Designing",
-    softwareDevButton: "Software Development",
-    androidDevButton: "Android App Development",
-    digitalMarketingButton: "Digital Marketing",
-    seoButton: "SEO",
-    ePublishingButton: "E-Publishing",
-    digitizationButton: "Digitization",
-    dataConversionButton: "Data Conversion",
-  };
+// Directly attach the click event handler to the "Go Back" link
+const goBackLink = document.getElementById("goBackLink");
 
-  // Event listener for each service button
-  Object.keys(serviceButtons).forEach((buttonId) => {
-    document.getElementById(buttonId).addEventListener("click", function () {
-      showServiceLinks(serviceButtons[buttonId]);
-    });
-  });
+// Check if the element exists before adding an event listener
+if (goBackLink) {
+  goBackLink.addEventListener("click", (event) => {
+    event.preventDefault(); // Prevent default link behavior
 
-  // Function to show service-specific links
-  function showServiceLinks(service) {
-    const serviceLinks = {
-      "Web Designing": ["https://andwebtech.com/service1.php"],
-      "Software Development": ["https://andwebtech.com/services2.php"],
-      "Android App Development": ["https://andwebtech.com/services3.php"],
-      "Digital Marketing": ["https://andwebtech.com/service4.php"],
-      SEO: ["https://andwebtech.com/service8.php"],
-      "E-Publishing": ["https://andwebtech.com/services5.php"],
-      Digitization: ["https://andwebtech.com/services6.php"],
-      "Data Conversion": ["https://andwebtech.com/service7.php"],
-    };
+    // Logic to toggle visibility or navigate back
+    const currentSection = document.getElementById("moreDetailsLinks");
+    const previousSection = document.getElementById("productServiceOptions");
 
-    // Set the links based on the selected service
-    const linksContainer = document
-      .getElementById("moreDetailsLinks")
-      .querySelector("ul");
-    linksContainer.innerHTML = ""; // Clear any previous links
-
-    // Add the new links
-    serviceLinks[service].forEach((link) => {
-      const li = document.createElement("li");
-      const a = document.createElement("a");
-      a.href = link;
-      a.target = "_blank";
-      a.textContent = service;
-      li.appendChild(a);
-      linksContainer.appendChild(li);
-    });
-
-    // Show the modal with the links
-    document.getElementById("moreDetailsLinks").style.display = "block";
-  }
-});
-
-// Wait until the DOM is fully loaded
-document.addEventListener("DOMContentLoaded", function () {
-  // Event listener for Tally Button
-  document.getElementById("tallyButton").addEventListener("click", function () {
-    changeHeading("Choose an option for Tally");
-  });
-
-  // Event listener for EzyBill Button
-  document
-    .getElementById("ezyBillButton")
-    .addEventListener("click", function () {
-      changeHeading("Choose an option for EzyBill");
-    });
-
-  // Event listener for Import BusyData Button
-  document
-    .getElementById("busyDataButton")
-    .addEventListener("click", function () {
-      changeHeading("Choose an option for Import BusyData");
-    });
-
-  // Event listener for Tally on Cloud Button
-  document
-    .getElementById("tallyCloudButton")
-    .addEventListener("click", function () {
-      changeHeading("Choose an option for Tally on Cloud");
-    });
-
-  // Event listener for Tally on Mobile Button
-  document
-    .getElementById("tallyMobileButton")
-    .addEventListener("click", function () {
-      changeHeading("Choose an option for Tally on Mobile");
-    });
-
-  // Function to dynamically change the heading text
-  function changeHeading(newHeading) {
-    console.log("Heading changing to:", newHeading); // Debugging line to ensure the function is called
-    var headingElement = document.getElementById("productOptionHeading");
-
-    // Change the text of the heading
-    if (headingElement) {
-      headingElement.textContent = newHeading;
+    if (currentSection && previousSection) {
+      currentSection.style.display = "none"; // Hide current section
+      previousSection.style.display = "block"; // Show the previous section
     }
-
-    // Show the modal
-    var modal = document.getElementById("contactMoreDetails");
-    if (modal) {
-      modal.style.display = "block"; // Display the modal
-    }
-  }
-});
+  });
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   const registrationForm = document.getElementById("registrationForm");
   const productOptions = document.getElementById("productOptions");
   const serviceOptions = document.getElementById("serviceOptions");
 
+  // JavaScript to handle button click
+  document.getElementById("backButton").addEventListener("click", function () {
+    // Show the registration form
+    document.getElementById("registrationForm").style.display = "block";
+
+    // Hide other sections if necessary
+    // Example: document.getElementById('otherSection').style.display = 'none';
+  });
+
   // Back button from Product Options
   document
-    .getElementById("backToRegistrationFromProduct")
-    ?.addEventListener("click", () => {
-      productOptions.style.display = "none";
-      registrationForm.style.display = "block";
-    });
-
-  // Back button from Service Options
-  document
-    .getElementById("backToFormFromService")
-    ?.addEventListener("click", () => {
-      serviceOptions.style.display = "none";
-      registrationForm.style.display = "block";
-    });
-
-  // Back Button Click for Product Options from Service Section
-  document
-    .getElementById("backToRegistrationFromService")
-    ?.addEventListener("click", () => {
-      registrationForm.style.display = "block";
-      serviceOptions.style.display = "none";
+    .getElementById("backToProductServiceOptionsFromProduct")
+    .addEventListener("click", function () {
+      document.getElementById("productOptions").style.display = "none";
+      document.getElementById("productServiceOptions").style.display = "block";
     });
 });
